@@ -1,0 +1,7 @@
+#Comments to file .gitignore
+
+#не игнорируем сам .gitignore
+#.gitignore
+
+#все файлы с окончанием на .*~
+*~
