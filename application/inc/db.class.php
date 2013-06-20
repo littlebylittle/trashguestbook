@@ -10,8 +10,8 @@ class dbConnection
 	public $dbType = 'mysql'; //mysql | sqlite | pgsql | mssql
 	public $connection;
 
-	private static $sortOrders = array('0'=>'ASC',
-		'1'=>'DESC',);
+	private static $sortOrders = array('0'=>'DESC',
+		'1'=>'ASC',);
 	private static $sortElems = array('0' => 'postdate',
 		'1' => 'username',
 		'2' => 'email');

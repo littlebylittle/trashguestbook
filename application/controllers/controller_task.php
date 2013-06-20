@@ -4,8 +4,8 @@ class Controller_task extends Controller
 {
 	private $db;
     private $data = array();
-    private static $sortOrders = array('0'=>'ASC',
-                            '1'=>'DESC',);
+    private static $sortOrders = array('0'=>'DESC',
+                            '1'=>'ASC',);
     private static $sortElems = array('0' => 'date',
                                '1' => 'name',
                                '2' => 'mail');
@@ -78,7 +78,7 @@ class Controller_task extends Controller
         }
 	    //set default values
 	    if (!isset($this->data['sortOrder']) )
-	        $this->data['sortOrder'] = 0; //ASC sort
+	        $this->data['sortOrder'] = 0; //DESC sort
 	    if (!isset($this->data['sortElem']))
 	        $this->data['sortElem'] =  0; //date field sorting;
 

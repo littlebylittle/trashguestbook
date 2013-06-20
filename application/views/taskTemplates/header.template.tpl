@@ -16,12 +16,22 @@
 	        Опции гостевой:
 	        <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
 	            Порядок вывода:
-	            <p><input type="radio" name="sortOrder" value="0">С первых</p>
-	            <p><input type="radio" name="sortOrder" value="1" checked="checked">C последних</p>
+		        <?php if ($data['sortOrder'] == '0') :?>
+	                <p><input type="radio" name="sortOrder" value="0" >С последних</p>
+	                <p><input type="radio" name="sortOrder" value="1" checked="checked">C первых</p>
+		        <?php else: ?>
+			        <p><input type="radio" name="sortOrder" value="0" checked="checked">С последних</p>
+			        <p><input type="radio" name="sortOrder" value="1">C первых</p>
+		        <?php endif; ?>
 	            Сортировать по:
-	            <p><input type="radio" name="sortElem" value="0" checked="checked">Дате</p>
-	            <p><input type="radio" name="sortElem" value="1">Имени</p>
-	            <p><input type="radio" name="sortElem" value="2">e-mail</p>
+	            <p><input type="radio" name="sortElem" value="0"
+		            <?php if ($data['sortElem'] == '0') : ?>
+	                        checked="checked"<?php endif; ?>>Дате</p>
+	            <p><input type="radio" name="sortElem" value="1"
+		            <?php if ($data['sortElem'] == '1') : ?>
+		                    checked="checked"<?php endif; ?>>Имени</p>
+	            <p><input type="radio" name="sortElem" value="2"
+			            <?php if ($data['sortElem'] == '2') : ?>checked="checked"<?php endif; ?>>e-mail</p>
 				<p><button>Save</button></p>
 	        </form>
 	        <hr />
