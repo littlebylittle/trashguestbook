@@ -21,13 +21,13 @@ class Controller_task extends Controller
 	    catch (PDOException $e) {
 		    $this->view->generate('taskTemplates/db.error.tpl', 'template_view.php');
 		    die();
-	    }
+	    };
     }
     
     function action_index()
     {
         //$data = array();
-        $this->data['records_on_page'] = 5;
+        $this->data['records_on_page'] = 25;
         $this->get_options();
 
 	    $this->set_cookie_options();
@@ -41,11 +41,12 @@ class Controller_task extends Controller
 
 	    $this->data['records'] = $this->db->get_page_records(
 		                        $this->data['current_page'],
-		                        $this->data['records_on_page']
-		                        /*TODO порядок заполнить*/);
+		                        $this->data['records_on_page'],
+		                        $this->data['sortOrder'],
+		                        $this->data['sortElem']);
         $this->view->generate(NULL, 'taskTemplates/header.template.tpl', $this->data);
         $this->view->generate(NULL, 'taskTemplates/body.template.tpl', $this->data);
-        $this->view->generate(NULL, 'taskTemplates/footer.template.tpl');
+        $this->view->generate(NULL, 'taskTemplates/footer.template.tpl', $this->data);
     }
     function get_options() {
 	    /**function manage $this->data variable (set defaults\other options); */
@@ -91,33 +92,45 @@ class Controller_task extends Controller
 		if (isset($this->data['sortElem'])) {
 			setcookie('sortElem', $this->data['sortElem'], 0, '/');
 		}
-		//var_dump($this->data);
 	}
 
 	function validate_name($name) {
-		//TODO: XSS, SQL inj check!
+		$pattern = '/[^-a-zA-z0-9]/';
+		$replacement = '';
+		$name = preg_replace($pattern, $replacement, $name);
 		return $name;
 	}
 
 	function validate_mail($mail) {
-		//TODO: XSS, SQL check;
+		$pattern = '/[^@.a-zA-Z0-9]/';
+		$replacement = '';
+		$mail = preg_replace($pattern, $replacement, $mail);
+		$mail = htmlspecialchars($mail);
+		echo $mail;
 		return $mail;
 	}
 
-	function check_captcha($captcha) {
-		return True;
-	}
-
 	function validate_text($text) {
+		//$text = htmlspecialchars($text);
+		$allowable_tags = '<i><a><code><strike><strong>';
+		$text = strip_tags( $text, $allowable_tags );
 		return $text;
 	}
 
 	function check_data() {
+		$success = True;
+		$this->data['error'] = '';
 		$this->data['name'] = $this->validate_name( $name=$_POST['user'] );
 		$this->data['mail'] = $this->validate_mail($_POST['mail']);
-		$this->data['captcha'] = $this->check_captcha($_POST['captcha']);
-		$this->data['datatext'] = $this->validate_text($_POST['datatext']);
-		return True;
+		$this->data['msg'] = $this->validate_text($this->data['msg']);
+		$this->data['home'] = htmlspecialchars( $this->data['home']);
+		echo $this->data['msg'];
+		if ($this->data['captcha'] != $this->data['realcaptcha']) {
+			$success &= False;
+			$this->data['error'] .= "Invalid captcha<br />";
+		}
+		echo $this->data['mail'];
+		return $success;
 	}
 
 	function action_savepost() {
@@ -128,22 +141,24 @@ class Controller_task extends Controller
 		$this->data['home'] = $_POST['homepage'];
 		$this->data['ua'] = $_SERVER["HTTP_USER_AGENT"];
 		$this->data['ip'] = $_SERVER["HTTP_X_REAL_IP"];
-		$pack = $this->data;
+		$this->data['captcha2'] = $_POST['captcha'];
+		$this->data['realcaptcha'] = $_COOKIE['captchaid'];
 
 		if ($this->check_data()) {
-			$this->send_data($pack);
+			$this->send_data($this->data);
 			$this->view->generate('taskTemplates/successful.tpl', 'template_view.php', $this->data);
 		} else {
 			$this->view->generate('taskTemplates/failure-record.tpl', 'template_view.php', $this->data);
 		}
 	}
 
-	function send_data($package) {
-		$this->db->add_record($name=$package['name'],
-			$mail=$package['mail'],
-			$ip=$package['ip'],
-			$home=$package['home'],
-			$msg = $package['msg'],
-			$ua = 'User-agent: mlflflflf();');
+	function send_data() {
+		$this->db->add_record(
+			$name = $this->data['name'],
+			$mail = $this->data['mail'],
+			$ip = $this->data['ip'],
+			$home= $this->data['home'],
+			$msg = $this->data['msg'],
+			$ua = $this->data['ua'] );
 	}
 }

@@ -1,3 +1,6 @@
 <?php
-    echo 'lol';
-    show_source(__FILE__);
+	$string = 'as^^$&.*@#$%^&*()+djfkjasdf@#%j123905zxcv../,';
+	$pattern = '/[^@.a-zA-Z0-9]/';
+	$replacement = '';
+	$string = preg_replace($pattern, $replacement, $string);
+	echo $string;

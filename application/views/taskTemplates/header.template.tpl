@@ -30,7 +30,7 @@
         <div class="sendData">
 	        <hr />
 	        <form action="/task/savepost" method="POST">
-	            <p class="captcha"> Captcha: <input type="text" name="captcha"><img src="/application/views/capcha/capcha.php"></p>
+	            <p class="captcha"> Captcha: <input name="captcha"><img src="/application/views/capcha/capcha.php"></p>
 	            <p><input type="hidden" name="secret" value="fuck you"></p>
 	            <p>Ваше имя: <input name="user"></p>
 		        <p>Ваш e-mail: <input name="mail"></p>

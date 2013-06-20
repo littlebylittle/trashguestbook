@@ -13,5 +13,6 @@
       imagestring($im,rand(2,9),$a+=15,rand(0,20),$arr[$i],$color);
     }
     header("Content-type: image/jpeg");
+	setcookie('captchaid', $r, 0, '/');
     imagejpeg($im,'',100);//выводим капчу
 ?>

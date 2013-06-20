@@ -6,6 +6,7 @@
 			<p class="author-name">Author: <?php echo $record['username'];?></p>
 			<p class="time">Time: {<?php echo $record['postdate']; ?>}</p><br />
 			<p class="homepage">home: <?php echo $record['homepage'];?></p>
+			<p class="mail">mail: <?php echo $record['email']; ?></p>
 			<p class="ip">ip: [<?php echo $record['ip']?>]</p>
 			<p class="useragent">user-agent: <?php echo $record['useragent'];?></p>
 			<hr>
